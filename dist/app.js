@@ -51,5 +51,5 @@ addButtonElement.addEventListener("click", (event) => {
     addTask({ name: taskNameInputElement.value, done: false });
     render();
 });
-addTask({ name: "Robota od szefa", done: true });
+addTask({ name: "Zrobic klate", category: "gym", done: false });
 render();

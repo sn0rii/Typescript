@@ -5,7 +5,7 @@ const taskContainerElement: HTMLElement = document.querySelector(".tasks");
 interface Task {
   name: string;
   done: boolean;
-  category?: string;
+  category?: "general" | "work" | "gym" | "hobby";
 }
 
 const categories: string[] = ["general", "work", "gym", "hobby"];
@@ -66,5 +66,5 @@ addButtonElement.addEventListener("click", (event: Event) => {
   render();
 });
 
-addTask({ name: "Robota od szefa", done: true });
+addTask({ name: "Zrobic klate", category: "gym", done: false });
 render();
