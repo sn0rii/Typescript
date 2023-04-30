@@ -1,14 +1,20 @@
 const taskNameInputElement: HTMLInputElement = document.querySelector("#name");
 const addButtonElement: HTMLButtonElement = document.querySelector("button");
 const taskContainerElement: HTMLElement = document.querySelector(".tasks");
+const categoriesContainerElement: HTMLElement =
+  document.querySelector(".categories");
+
+let selectedCategory: Category;
+
+type Category = "general" | "work" | "gym" | "hobby";
 
 interface Task {
   name: string;
   done: boolean;
-  category?: "general" | "work" | "gym" | "hobby";
+  category?: Category;
 }
 
-const categories: string[] = ["general", "work", "gym", "hobby"];
+const categories: Category[] = ["general", "work", "gym", "hobby"];
 
 const tasks: Task[] = [
   {
@@ -36,9 +42,9 @@ const render = () => {
       taskElement.classList.add(task.category);
     }
     const id: string = `task-${index}`;
-    const LabelElement: HTMLLabelElement = document.createElement("label");
-    LabelElement.innerText = task.name;
-    LabelElement.setAttribute("for", id);
+    const labelElement: HTMLLabelElement = document.createElement("label");
+    labelElement.innerText = task.name;
+    labelElement.setAttribute("for", id);
 
     const checkboxElement: HTMLInputElement = document.createElement("input");
     checkboxElement.type = "checkbox";
@@ -49,10 +55,34 @@ const render = () => {
       task.done = !task.done;
     });
 
-    taskElement.appendChild(LabelElement);
+    taskElement.appendChild(labelElement);
     taskElement.appendChild(checkboxElement);
 
     taskContainerElement.appendChild(taskElement);
+  });
+};
+
+const renderCategories = () => {
+  categories.forEach((category) => {
+    const categoryElement: HTMLElement = document.createElement("li");
+
+    const radioInputElement: HTMLInputElement = document.createElement("input");
+    radioInputElement.type = "radio";
+    radioInputElement.name = "category";
+    radioInputElement.value = category;
+    radioInputElement.id = `category-${category}`;
+    radioInputElement.addEventListener("change", () => {
+      selectedCategory = category;
+    });
+
+    const labelElement: HTMLLabelElement = document.createElement("label");
+    labelElement.setAttribute("for", `category-${category}`);
+    labelElement.innerText = category;
+
+    categoryElement.appendChild(radioInputElement);
+    categoryElement.appendChild(labelElement);
+
+    categoriesContainerElement.appendChild(categoryElement);
   });
 };
 
@@ -62,9 +92,14 @@ const addTask = (task: Task) => {
 
 addButtonElement.addEventListener("click", (event: Event) => {
   event.preventDefault();
-  addTask({ name: taskNameInputElement.value, done: false });
+  addTask({
+    name: taskNameInputElement.value,
+    done: false,
+    category: selectedCategory,
+  });
   render();
 });
 
 addTask({ name: "Zrobic klate", category: "gym", done: false });
+renderCategories();
 render();
